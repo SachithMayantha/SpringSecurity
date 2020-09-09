@@ -1,13 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+         pageEncoding="ISO-8859-1" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Home</title>
+    <meta charset="ISO-8859-1">
+    <title>Spring Security</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<h1>Hello.!</h1><hr>
-	<a href="/logout">logout</a>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Main Page</h1>
+        <hr>
+        <form action="/employee/list" method="get">
+            <button class="btn btn-success">Employee List</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

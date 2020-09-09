@@ -5,21 +5,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
 public class EmployeeBean {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+
+	private String id;
 	private String username;
 	private String department;
 	private String mobile_no;
 	private String role_id;
 	private String password;
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getUsername() {

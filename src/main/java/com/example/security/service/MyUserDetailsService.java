@@ -11,21 +11,20 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class MyUserDetailsService implements UserDetailsService{
+public class MyUserDetailsService implements UserDetailsService {
 
-	@Autowired
-	private EmployeeRepository employeeRepo;
+    @Autowired
+    private EmployeeRepository employeeRepo;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		System.out.println("loadUserByUsername--MyUserDetailsService");
-		Optional<Employees> employees = employeeRepo.findByUsername(username);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("loadUserByUsername--MyUserDetailsService");
+        Optional<Employees> employees = employeeRepo.findByUsername(username);
 
-		if (employees==null)
-			throw new UsernameNotFoundException("User 404");
-		return employees.map(UserPrincipal::new).get();
-	}
-	
-	
+        if (employees == null)
+            throw new UsernameNotFoundException("User 404");
+        return employees.map(UserPrincipal::new).get();
+    }
+
 
 }
