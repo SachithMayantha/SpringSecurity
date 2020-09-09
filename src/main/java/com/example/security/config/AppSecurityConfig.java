@@ -36,8 +36,11 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter{
 		http
 		.csrf().disable()
 		.authorizeRequests().antMatchers("/login").permitAll()
-        .antMatchers("/").hasAnyRole("USER")
+        .antMatchers("/main").hasAuthority("ADMIN")
+		.antMatchers("/user").hasAuthority("USER")
 		.anyRequest().authenticated()
+		.and()
+		.exceptionHandling().accessDeniedPage("/login")
 		.and()
 		.formLogin()
 		.loginPage("/login").permitAll()
@@ -48,13 +51,4 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter{
 		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 		.logoutSuccessUrl("/login").permitAll();
 	}
-	//	@Override
-//	protected UserDetailsService userDetailsService() {
-//
-//		List<UserDetails> user = new ArrayList<>();
-//		user.add(User.withDefaultPasswordEncoder().username("admin").password("1234").roles("USER").build());
-//
-//		return new InMemoryUserDetailsManager(user);
-//	}
-
 }
