@@ -4,7 +4,9 @@ import com.example.security.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole,String> {
-    UserRole findByRoleId(String role_id);
+    List<UserRole> findByRoleId(String role_id);
 }

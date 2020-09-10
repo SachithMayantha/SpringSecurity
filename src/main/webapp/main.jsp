@@ -15,7 +15,7 @@
         <h1>Main Page</h1>
         <hr>
         <form action="/employee/list" method="get">
-            <button class="btn btn-success">Employee List</button>
+            <button class="btn btn-success">Get Start.!</button>
         </form>
     </div>
 </div>
