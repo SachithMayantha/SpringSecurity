@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head xmlns:th="http://www.thymeleaf.org">
+    <root xmlns:th="http://www.thymeleaf.org"/>
     <title>Spring Security</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,9 +13,7 @@
 
 <div class="container">
     <h2>Login form</h2><br>
-    <b>${SPRING_SECURITY_LAST_EXCEPTION.message}</b>
     <form class="form-inline" action="/login" method="post">
-
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">
@@ -27,6 +26,5 @@
 
     </form>
 </div>
-
 </body>
 </html>

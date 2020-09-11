@@ -6,6 +6,9 @@ import com.example.security.entity.UserRole;
 import com.example.security.repository.EmployeeRepository;
 import com.example.security.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,18 +21,37 @@ public class EmployeeService {
     @Autowired
     UserRoleRepository userRoleRepository;
 
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     public List<Employees> getAll() {
         return employeeRepository.findAll();
     }
-    public List<UserRole> getRoles(){
+
+    public List<UserRole> getRoles() {
         return userRoleRepository.findAll();
     }
-    public Employees addEmployees(EmployeeBean empBean){
+
+    public Employees addEmployees(EmployeeBean empBean) {
+        UserRole roleid = userRoleRepository.getOne(empBean.getRole_id());
+        System.out.println("Add Employee Service");
         Employees emp = new Employees();
-        emp.setUsername(empBean.getUsername());
+        emp.setUsername(empBean.getUsername().trim());
         emp.setDepartment(empBean.getDepartment());
-        emp.setMobileNo(empBean.getMobile_no());
-//        emp.setRoleId(empBean.getRole_id());
+        if (!empBean.getMobile_no().isEmpty()) {
+            emp.setMobileNo(empBean.getMobile_no());
+        } else {
+            emp.setMobileNo("---");
+        }
+        emp.setPassword(encoder().encode(empBean.getPassword()));
+        emp.setRoleId(roleid);
         return employeeRepository.save(emp);
+    }
+
+    public Employees getEmployees(Long id) {
+        System.out.println("get Employee Service");
+        return employeeRepository.findById(id).get();
     }
 }

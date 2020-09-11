@@ -21,7 +21,7 @@ public class MainController {
 
     @RequestMapping("/user")
     public String user() {
-        return "user";
+        return "index";
     }
 
     @RequestMapping("/logout")

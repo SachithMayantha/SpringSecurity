@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class EmployeeController {
     EmployeeService employeeService;
 
     @GetMapping("/list")
-    public String getAll(Model model1,Model model2) {
+    public String getAll(Model model1, Model model2) {
         List<Employees> employees = employeeService.getAll();
         List<EmployeeBean> list = new ArrayList<>();
         List<UserRoleBean> list2 = new ArrayList<>();
@@ -36,23 +35,36 @@ public class EmployeeController {
             employeeBean.setUsername(employees.get(i).getUsername());
             employeeBean.setDepartment(employees.get(i).getDepartment());
             employeeBean.setMobile_no(employees.get(i).getMobileNo());
-            System.out.println(employees.get(i).getRoleId());
 
             list.add(employeeBean);
             model1.addAttribute("list", list);
         }
         int size2 = roleList.size();
-        for (int j=0;j<size2;j++){
-             UserRoleBean userRoleBean = new UserRoleBean();
-             userRoleBean.setRole_id(roleList.get(j).getRoleId());
-             userRoleBean.setRole_name(roleList.get(j).getRoleName());
-             list2.add(userRoleBean);
-            model2.addAttribute("roleList",list2);
+        for (int j = 0; j < size2; j++) {
+            UserRoleBean userRoleBean = new UserRoleBean();
+            userRoleBean.setRole_id(roleList.get(j).getRoleId());
+            userRoleBean.setRole_name(roleList.get(j).getRoleName());
+            list2.add(userRoleBean);
+            model2.addAttribute("roleList", list2);
         }
         return "listEmp";
     }
-    public RedirectView addEmp(EmployeeBean empBean){
+
+    @PostMapping("/add")
+    public RedirectView addEmp(EmployeeBean empBean) {
+        System.out.println("Add Employee Controller");
         employeeService.addEmployees(empBean);
         return new RedirectView("/employee/list");
+    }
+
+    @PostMapping("/update/{id}")
+    public RedirectView updateEmp(@RequestParam("id") Long id) {
+        System.out.println("get Employee Controller");
+        return new RedirectView("/employee/list");
+    }
+    @GetMapping("/getEmployee/{id}")
+    public Employees getEmp(@PathVariable("id") Long id) {
+    System.out.println("Get Employee by ID Controller");
+        return employeeService.getEmployees(id);
     }
 }
