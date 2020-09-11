@@ -26,6 +26,7 @@ public class EmployeeService {
         return new BCryptPasswordEncoder();
     }
 
+
     public List<Employees> getAll() {
         return employeeRepository.findAll();
     }
@@ -50,8 +51,22 @@ public class EmployeeService {
         return employeeRepository.save(emp);
     }
 
-    public Employees getEmployees(Long id) {
+    public EmployeeBean getEmployees(Long id) {
         System.out.println("get Employee Service");
-        return employeeRepository.findById(id).get();
+        Employees employees = employeeRepository.findById(id).get();
+        EmployeeBean obj = new EmployeeBean();
+        UserRole ob = employees.getRoleId();
+
+        obj.setId(employees.getId().toString());
+        obj.setUsername(employees.getUsername());
+        obj.setDepartment(employees.getDepartment());
+        obj.setMobile_no(employees.getMobileNo());
+        obj.setRole_id(ob.getRoleName());
+        return obj;
+    }
+
+    public void deleteEmployee(Long id) {
+        System.out.println("Employee Delete Service");
+        employeeRepository.deleteById(id);
     }
 }

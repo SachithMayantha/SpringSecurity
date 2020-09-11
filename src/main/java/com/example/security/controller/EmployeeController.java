@@ -5,8 +5,9 @@ import com.example.security.bean.UserRoleBean;
 import com.example.security.entity.Employees;
 import com.example.security.entity.UserRole;
 import com.example.security.service.EmployeeService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,9 +63,35 @@ public class EmployeeController {
         System.out.println("get Employee Controller");
         return new RedirectView("/employee/list");
     }
-    @GetMapping("/getEmployee/{id}")
-    public Employees getEmp(@PathVariable("id") Long id) {
-    System.out.println("Get Employee by ID Controller");
-        return employeeService.getEmployees(id);
+    @GetMapping("/getEmployee")
+    public @ResponseBody
+    String getEmployee(@RequestParam Long id) {
+        System.out.println("getEmployee method called - "+id);
+        String json = "";
+
+        try {
+            if (id != null) {
+                EmployeeBean emp = employeeService.getEmployees(id);
+
+                if (emp != null) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    json = objectMapper.writeValueAsString(emp);
+                } else {
+                    json = "Could not find data requested";
+                }
+            } else {
+                json = "Empty user role code";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+    @PostMapping("/delete")
+    public RedirectView deleteEmp(@RequestParam String id){
+        System.out.println("Employee Delete Controller");
+        Long i = Long.parseLong(id);
+        employeeService.deleteEmployee(i);
+        return new RedirectView("/employee/list");
     }
 }

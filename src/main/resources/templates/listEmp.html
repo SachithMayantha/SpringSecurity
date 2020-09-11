@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/html">
 <head xmlns:th="http://www.thymeleaf.org">
@@ -10,55 +9,32 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="container">
-    <div class="jumbotron">
-        <div class="container text-right">
-            <form action="/logout">
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
+<!--Start - Delete Employee-->
+
+<div id="delete" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Delete Employee</h3>
+            </div>
+            <div class="modal-body">
+                    <form action="/employee/delete" method="post">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+            </div>
         </div>
-        <div class="container text-left">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#employee">Employee +
-            </button>
-        </div>
-        <hr>
-        <h3>Employee List</h3><br>
-        <form action="/employee/list" method="GET">
-            <table class="table table-dark" id="table">
-                <tr>
-                    <th>ID</th>
-                    <th>Employee Name</th>
-                    <th>Department</th>
-                    <th>Mobile No</th>
-                    <th>Actions</th>
-                </tr>
-                <tbody>
-                <tr th:each= "emp : ${list}">
-                    <td><span th:text="${emp.id}"/></td>
-                    <td><span th:text="${emp.username}"/></td>
-                    <td><span th:text="${emp.department}"/></td>
-                    <td><span th:text="${emp.mobile_no}"/></td>
-                    <td>
-                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#edit" onclick="myFunc(this.id);">Edit
-                        </button>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete">Delete
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
     </div>
 </div>
 
+<!--End - Delete Employee-->
 <!--Start - Add Employee Modal-->
-    <div id="employee" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Add Employee</h3>
-                </div>
-                <form action="/employee/add" method="post">
+<div id="employee" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Employee</h3>
+            </div>
+            <form action="/employee/add" method="post">
                 <div class="modal-body">
                     <span style="color: red">*</span><small>Required</small><br>
                     <fieldset class="form-group">
@@ -88,64 +64,9 @@
 
                         <label>Select UserRole</label><br>
                         <select name="role_id" class="form-control">
-                            <option th:each="role : ${roleList}" th:value="${role.role_id}" th:text="${role.role_name}"/></option>
-                        </select>
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <label>User Password (must be 8-15 characters only)</label><span style="color: red">*</span>
-                        <input type="password" class="form-control" name="password" required="required"
-                          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}" placeholder="Enter the password">
-                    </fieldset>
-                </div>
-                <div class="modal-footer">
-                    <div class="container text-left">
-                    <button type="submit" class="btn btn-success">Add Employee</button>
-                    </div>
-                </div>
-                </form>
-            </div>
-
-        </div>
-    </div>
-<!--End - Add Employee Modal-->
-
-<!--Start - Edit Employee Modal-->
-<div id="edit" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Add Employee</h3>
-            </div>
-            <form action="/employee/add" method="post">
-                <div class="modal-body">
-                    <span style="color: red">*</span><small>Required</small><br>
-                    <fieldset class="form-group">
-                        <label>Employee Username (0-15 Characters)</label><span style="color: red">*</span>
-                        <input type="text" class="form-control" name="username"
-                               required="required" pattern="[A-Za-z\s]{0,15}"
-                               placeholder="Enter the username">
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <label>Select Department</label> <select class="form-control"
-                                                                name="department">
-                        <option value="---">Select Department</option>
-                        <option value="Technical">Technical</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Human Resource">Human Resource</option>
-                    </select>
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <label>Employee Mobile Number</label>
-                        <input type="tel" class="form-control" name="mobile_no"
-                               pattern="[A-Za-z\s]{0,15}"
-                               placeholder="Enter the Mobile Number">
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <label>Select UserRole</label><br>
-                        <select name="role_id" class="form-control">
-                            <option th:each="role : ${roleList}" th:value="${role.role_id}" th:text="${role.role_name}"/></option>
+                            <option th:each="role : ${roleList}" th:value="${role.role_id}"
+                                    th:text="${role.role_name}"/>
+                            </option>
                         </select>
                     </fieldset>
                     <fieldset class="form-group">
@@ -164,20 +85,143 @@
 
     </div>
 </div>
-<!--End - Edit Employee Modal-->
-<script>
-    var table = document.getElementById('table');
+<!--End - Add Employee Modal-->
 
-    for (var i = 2; i < table.rows.length; i++) {
-        table.rows[i].onclick = function () {
-            //rIndex = this.rowIndex;
-            document.getElementById("V_Id").value = this.cells[0].innerHTML;
-            document.getElementById("V_Username").value = this.cells[1].innerHTML;
-        };
-     }
-    // function myFunc(id){
-    //     window.location = '/getEmployee/id';
-    // }
+<!--Start - Edit Employee Modal-->
+<div id="edit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Employee</h3>
+            </div>
+            <form action="/employee/add" method="post">
+                <div class="modal-body">
+                    <span style="color: red">*</span><small>Required</small><br>
+                    <fieldset class="form-group">
+                        <label>Employee Username (0-15 Characters)</label><span style="color: red">*</span>
+                        <input type="text" class="form-control" id="username" name="username"
+                               required="required" pattern="[A-Za-z\s]{0,15}"
+                               placeholder="Enter the username">
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>Select Department</label> <select class="form-control"
+                                                                 name="department" id="department">
+                        <option value="Technical">Technical</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Transportation">Transportation</option>
+                        <option value="Human Resource">Human Resource</option>
+                    </select>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>Employee Mobile Number</label>
+                        <input type="tel" class="form-control" name="mobile_no"
+                               pattern="[A-Za-z\s]{0,15}"
+                               placeholder="Enter the Mobile Number" id="mobile_no">
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>Select UserRole</label><br>
+                        <select class="form-control" id="role_id">
+                            <option th:each="role : ${roleList}" th:value="${role.role_id}"
+                                    th:text="${role.role_name}"/>
+                            </option>
+                        </select>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <div class="container text-left">
+                        <button type="submit" class="btn btn-success">Update Employee</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<!--End - Edit Employee Modal-->
+
+<div class="container">
+    <div class="jumbotron">
+        <div class="container text-right">
+            <form action="/logout">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+        <div class="container text-left">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#employee">Employee +
+            </button>
+        </div>
+        <hr>
+        <h3>Employee List</h3><br>
+        <form action="/employee/list" method="GET">
+            <table class="table table-dark" id="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Employee Name</th>
+                    <th>Department</th>
+                    <th>Mobile No</th>
+                    <th>Actions</th>
+                </tr>
+                <tbody>
+                <tr th:each="emp : ${list}">
+                    <input type="hidden" th:value="${emp.id}"/>
+                    <td><span th:text="${emp.id}"/></td>
+                    <td><span th:text="${emp.username}"/></td>
+                    <td><span th:text="${emp.department}"/></td>
+                    <td><span th:text="${emp.mobile_no}"/></td>
+                    <td>
+                        <a type="button" class="btn btn-warning" data-toggle="modal"
+                           th:onclick="editEmployee([[${emp.id}]])">Edit</a>
+                        <a type="button" class="btn btn-danger" data-toggle="modal"
+                           th:onclick="deleteEmployee([[${emp.id}]])">Delete
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+<!--<script th:inline="javascript">-->
+<!--    var i = [[${list}]];-->
+<!--    console.log(i);-->
+<!--</script>-->
+<script>
+    function editEmployee(id) {
+        $('#edit').modal('show');
+        // var id = $(id).parent().prev().prev().prev().prev()[0].outerText;
+        $.ajax({
+            type: "GET",
+            url: "/employee/getEmployee",
+            data: {
+                id: id
+            },
+            dataType: "json",
+            success: function (data) {
+                $('#id').val(data.id);
+                $('#username').val(data.username);
+                $('#department').val(data.department);
+                $('#mobile_no').val(data.mobile_no);
+                $('#role_id').val(data.role_id);
+            }, error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+    function deleteEmployee(id) {
+        $('#delete').modal('show');
+        $.ajax({
+            type: "POST",
+            url: "/employee/delete",
+            data: {
+                id: id
+            },
+            dataType: "json", error: function (e) {
+                console.log(e);
+            }
+        });
+    }
 </script>
 </body>
 </html>
