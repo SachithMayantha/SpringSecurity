@@ -7,20 +7,23 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
 </head>
 <body>
+
 <!--Start - Delete Employee-->
 
 <div id="delete" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Delete Employee</h3>
+                <h3 class="modal-title">Are you sure?</h3>
             </div>
             <div class="modal-body">
-                    <form action="/employee/delete" method="post">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+                <form action="/employee/delete" method="post">
+                    <input type="hidden" class="form-control" id="id" name="id">
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </form>
             </div>
         </div>
     </div>
@@ -44,21 +47,23 @@
                                placeholder="Enter the username">
                     </fieldset>
                     <fieldset class="form-group">
-                        <label>Select Department</label> <select class="form-control"
-                                                                 name="department">
-                        <option value="---">Select Department</option>
-                        <option value="Technical">Technical</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Human Resource">Human Resource</option>
-                    </select>
+                        <label>Select Department</label>
+                        <select class="form-control"
+                                name="department">
+                            <option value="---">Select Department</option>
+                            <option value="Technical">Technical</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Human Resource">Human Resource</option>
+                        </select>
                     </fieldset>
                     <fieldset class="form-group">
                         <label>Employee Mobile Number</label>
-                        <input type="tel" class="form-control" name="mobile_no"
-                               pattern="[A-Za-z\s]{0,15}"
+                        <input type="number" class="form-control" name="mobile_no"
                                placeholder="Enter the Mobile Number">
+                        <label for="phone">Employee Mobile Number</label>
+                        <input type="tel" id="phone" name="phone">
                     </fieldset>
                     <fieldset class="form-group">
 
@@ -70,9 +75,40 @@
                         </select>
                     </fieldset>
                     <fieldset class="form-group">
-                        <label>User Password (must be 8-15 characters only)</label><span style="color: red">*</span>
-                        <input type="password" class="form-control" name="password" required="required"
-                               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}" placeholder="Enter the password">
+                        <label for="password">User Password (must be 8-15 characters only)</label><span
+                            style="color: red">*</span>
+                        <input type="password" class="form-control" name="password" required="required" id="password"
+                               placeholder="Enter the password">
+                        <meter max="4" id="password-strength"></meter>
+                        <p id="password-strength-text"></p>
+                        <script type="text/javascript">
+                            var strength = {
+                                0: "Weakest",
+                                1: "Weak",
+                                2: "OK",
+                                3: "Good",
+                                4: "Strong"
+                            }
+
+                            var password = document.getElementById('password');
+                            var meter = document.getElementById('password-strength');
+                            var text = document.getElementById('password-strength-text');
+
+                            password.addEventListener('input', function () {
+                                var val = password.value;
+                                var result = zxcvbn(val);
+
+                                // This updates the password strength meter
+                                meter.value = result.score;
+
+                                // This updates the password meter text
+                                if (val !== "") {
+                                    text.innerHTML = "Password Strength: " + strength[result.score];
+                                } else {
+                                    text.innerHTML = "";
+                                }
+                            });
+                        </script>
                     </fieldset>
                 </div>
                 <div class="modal-footer">
@@ -115,8 +151,7 @@
                     </fieldset>
                     <fieldset class="form-group">
                         <label>Employee Mobile Number</label>
-                        <input type="tel" class="form-control" name="mobile_no"
-                               pattern="[A-Za-z\s]{0,15}"
+                        <input type="number" class="form-control" name="mobile_no"
                                placeholder="Enter the Mobile Number" id="mobile_no">
                     </fieldset>
                     <fieldset class="form-group">
@@ -142,6 +177,8 @@
 
 <div class="container">
     <div class="jumbotron">
+        <label>Logged in :</label>
+        <input type="text" name="username">
         <div class="container text-right">
             <form action="/logout">
                 <button type="submit" class="btn btn-danger">Logout</button>
@@ -173,7 +210,7 @@
                         <a type="button" class="btn btn-warning" data-toggle="modal"
                            th:onclick="editEmployee([[${emp.id}]])">Edit</a>
                         <a type="button" class="btn btn-danger" data-toggle="modal"
-                           th:onclick="deleteEmployee([[${emp.id}]])">Delete
+                           th:onclick="getEmployee([[${emp.id}]])">Delete
                         </a>
                     </td>
                 </tr>
@@ -199,6 +236,27 @@
             dataType: "json",
             success: function (data) {
                 $('#id').val(data.id);
+                // $('#username').val(data.username);
+                // $('#department').val(data.department);
+                // $('#mobile_no').val(data.mobile_no);
+                // $('#role_id').val(data.role_id);
+            }, error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+    function getEmployee(id) {
+        $('#delete').modal('show');
+        $.ajax({
+            type: "GET",
+            url: "/employee/getEmployee",
+            data: {
+                id: id
+            },
+            dataType: "json",
+            success: function (data) {
+                $('#id').val(data.id);
                 $('#username').val(data.username);
                 $('#department').val(data.department);
                 $('#mobile_no').val(data.mobile_no);
@@ -208,7 +266,6 @@
             }
         });
     }
-
     function deleteEmployee(id) {
         $('#delete').modal('show');
         $.ajax({
@@ -217,9 +274,14 @@
             data: {
                 id: id
             },
-            dataType: "json", error: function (e) {
+            dataType: "json",
+            success: function (data) {
+                $('#id').val(data.id);
+                // var id = JSON.stringify(id);
+            }, error: function (e) {
                 console.log(e);
             }
+
         });
     }
 </script>

@@ -5,8 +5,8 @@ import com.example.security.bean.UserRoleBean;
 import com.example.security.entity.Employees;
 import com.example.security.entity.UserRole;
 import com.example.security.service.EmployeeService;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -87,11 +87,14 @@ public class EmployeeController {
         }
         return json;
     }
+
     @PostMapping("/delete")
-    public RedirectView deleteEmp(@RequestParam String id){
+    public RedirectView deleteEmp(@RequestParam("id") Long id){
+
         System.out.println("Employee Delete Controller");
-        Long i = Long.parseLong(id);
-        employeeService.deleteEmployee(i);
+        System.out.println(id);
+        System.out.println(id.getClass().getName());
+        employeeService.deleteEmployee(id);
         return new RedirectView("/employee/list");
     }
 }

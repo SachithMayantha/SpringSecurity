@@ -28,4 +28,5 @@ public class MainController {
     public String logout() {
         return "login";
     }
+
 }
