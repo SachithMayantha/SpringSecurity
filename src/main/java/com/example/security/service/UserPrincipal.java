@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,12 +22,13 @@ public class UserPrincipal extends Employees implements UserDetails {
     private Employees employees;
     private UserRole userRole;
 
+
     public UserPrincipal(Employees employees) {
         super();
         System.out.println("UserPrincipal constructor -- UserPrincipal");
         this.employees = employees;
     }
-//hfhtfhgffsfes
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -36,25 +38,17 @@ public class UserPrincipal extends Employees implements UserDetails {
         System.out.println(new SimpleGrantedAuthority(role.getRoleName()));
         return authorities;
     }
-//
-//    public Collection<? extends GrantedAuthority> getAuthorities(Collection<UserRole> roles) {
-//        List<GrantedAuthority> authorities
-//                = new ArrayList<>();
-//        for (UserRole role: roles) {
-//            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-//            new SimpleGrantedAuthority(role.getRoleName());
-//        }
-//
-//        return authorities;
-//    }
+
     @Override
-    public String getPassword() {
+    public String getPassword()
+    {
+        System.out.println("User Pricipal "+employees.getPassword());
         return employees.getPassword();
     }
 
     @Override
     public String getUsername() {
-        System.out.println(employees.getUsername());
+        System.out.println("User Pricipal "+employees.getUsername());
         return employees.getUsername();
     }
 

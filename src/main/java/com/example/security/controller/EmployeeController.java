@@ -5,15 +5,17 @@ import com.example.security.bean.UserRoleBean;
 import com.example.security.entity.Employees;
 import com.example.security.entity.UserRole;
 import com.example.security.service.EmployeeService;
+import com.example.security.service.UserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -48,6 +50,12 @@ public class EmployeeController {
             list2.add(userRoleBean);
             model2.addAttribute("roleList", list2);
         }
+
+//        UserPrincipal userPrincipal = null;
+//        HttpSession httpSession = null;
+//        System.out.println("Added to the session "+userPrincipal.getAuthorities());
+//            httpSession.setAttribute("user",employees.addAll((Collection<? extends Employees>) userPrincipal.getAuthorities()));
+
         return "listEmp";
     }
 
@@ -58,9 +66,9 @@ public class EmployeeController {
         return new RedirectView("/employee/list");
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     public RedirectView updateEmp(@RequestParam("id") Long id) {
-        System.out.println("get Employee Controller");
+        System.out.println("update Employee Controller");
         return new RedirectView("/employee/list");
     }
     @GetMapping("/getEmployee")
@@ -72,10 +80,11 @@ public class EmployeeController {
         try {
             if (id != null) {
                 EmployeeBean emp = employeeService.getEmployees(id);
-
+                System.out.println("Controller get Employee role "+emp.getRole_id());
                 if (emp != null) {
                     ObjectMapper objectMapper = new ObjectMapper();
                     json = objectMapper.writeValueAsString(emp);
+                    System.out.println("JSON length "+json.length());
                 } else {
                     json = "Could not find data requested";
                 }
@@ -85,6 +94,7 @@ public class EmployeeController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return json;
     }
 

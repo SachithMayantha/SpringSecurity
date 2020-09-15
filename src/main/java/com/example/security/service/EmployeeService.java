@@ -28,6 +28,7 @@ public class EmployeeService {
 
 
     public List<Employees> getAll() {
+
         return employeeRepository.findAll();
     }
 

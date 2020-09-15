@@ -10,9 +10,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
 </head>
 <body>
-
+<script language="javascript">
+    var session = '<%= Session["user"] %>';
+    console.log(session);
+</script>
 <!--Start - Delete Employee-->
-
 <div id="delete" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -128,9 +130,9 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Add Employee</h3>
+                <h3 class="modal-title">Edit Employee</h3>
             </div>
-            <form action="/employee/add" method="post">
+            <form action="/employee/update" method="post">
                 <div class="modal-body">
                     <span style="color: red">*</span><small>Required</small><br>
                     <fieldset class="form-group">
@@ -141,7 +143,8 @@
                     </fieldset>
                     <fieldset class="form-group">
                         <label>Select Department</label> <select class="form-control"
-                                                                 name="department" id="department">
+                         name="department" id="department">
+                        <option value="department"></option>
                         <option value="Technical">Technical</option>
                         <option value="Finance">Finance</option>
                         <option value="Marketing">Marketing</option>
@@ -157,6 +160,7 @@
                     <fieldset class="form-group">
                         <label>Select UserRole</label><br>
                         <select class="form-control" id="role_id">
+                            <option value="role_id"></option>
                             <option th:each="role : ${roleList}" th:value="${role.role_id}"
                                     th:text="${role.role_name}"/>
                             </option>
@@ -170,7 +174,6 @@
                 </div>
             </form>
         </div>
-
     </div>
 </div>
 <!--End - Edit Employee Modal-->
@@ -236,10 +239,11 @@
             dataType: "json",
             success: function (data) {
                 $('#id').val(data.id);
-                // $('#username').val(data.username);
-                // $('#department').val(data.department);
-                // $('#mobile_no').val(data.mobile_no);
-                // $('#role_id').val(data.role_id);
+                $('#username').val(data.username);
+                $('#department').val(data.department);
+                $('#mobile_no').val(data.mobile_no);
+                $('#role_id').val(data.role_id);
+
             }, error: function (e) {
                 console.log(e);
             }
@@ -261,6 +265,7 @@
                 $('#department').val(data.department);
                 $('#mobile_no').val(data.mobile_no);
                 $('#role_id').val(data.role_id);
+                console.log(data.role_id);
             }, error: function (e) {
                 console.log(e);
             }
