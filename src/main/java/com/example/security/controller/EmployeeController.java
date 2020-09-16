@@ -67,8 +67,10 @@ public class EmployeeController {
     }
 
     @PostMapping("/update")
-    public RedirectView updateEmp(@RequestParam("id") Long id) {
+    public RedirectView updateEmp(EmployeeBean employeeBean) {
         System.out.println("update Employee Controller");
+        System.out.println(employeeBean.getRole_id());
+        employeeService.updateEmp(employeeBean);
         return new RedirectView("/employee/list");
     }
     @GetMapping("/getEmployee")

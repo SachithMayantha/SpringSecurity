@@ -64,8 +64,6 @@
                         <label>Employee Mobile Number</label>
                         <input type="number" class="form-control" name="mobile_no"
                                placeholder="Enter the Mobile Number">
-                        <label for="phone">Employee Mobile Number</label>
-                        <input type="tel" id="phone" name="phone">
                     </fieldset>
                     <fieldset class="form-group">
 
@@ -135,6 +133,9 @@
             <form action="/employee/update" method="post">
                 <div class="modal-body">
                     <span style="color: red">*</span><small>Required</small><br>
+
+                        <input type="hidden" class="form-control" name="id" id="id2">
+
                     <fieldset class="form-group">
                         <label>Employee Username (0-15 Characters)</label><span style="color: red">*</span>
                         <input type="text" class="form-control" id="username" name="username"
@@ -159,8 +160,7 @@
                     </fieldset>
                     <fieldset class="form-group">
                         <label>Select UserRole</label><br>
-                        <select class="form-control" id="role_id">
-                            <option value="role_id"></option>
+                        <select class="form-control" id="role_id" name="role_id">
                             <option th:each="role : ${roleList}" th:value="${role.role_id}"
                                     th:text="${role.role_name}"/>
                             </option>
@@ -238,12 +238,11 @@
             },
             dataType: "json",
             success: function (data) {
-                $('#id').val(data.id);
+                $('#id2').val(data.id);
                 $('#username').val(data.username);
                 $('#department').val(data.department);
                 $('#mobile_no').val(data.mobile_no);
                 $('#role_id').val(data.role_id);
-
             }, error: function (e) {
                 console.log(e);
             }

@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -26,9 +27,18 @@ public class EmployeeService {
         return new BCryptPasswordEncoder();
     }
 
-
+    public Employees updateEmp(EmployeeBean employeeBean){
+        Optional<Employees> employees = employeeRepository.findById(Long.parseLong(employeeBean.getId()));
+        List<UserRole> userRole = userRoleRepository.findByRoleId(employeeBean.getRole_id());
+        Employees employees1 = employees.get();
+        employees1.setUsername(employeeBean.getUsername());
+        employees1.setMobileNo(employeeBean.getMobile_no());
+        employees1.setDepartment(employeeBean.getDepartment());
+        employees1.setRoleId(userRole.get(0));
+        System.out.println(employeeBean.getRole_id());
+        return employeeRepository.save(employees1);
+    }
     public List<Employees> getAll() {
-
         return employeeRepository.findAll();
     }
 
