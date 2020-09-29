@@ -5,17 +5,17 @@ import com.example.security.bean.UserRoleBean;
 import com.example.security.entity.Employees;
 import com.example.security.entity.UserRole;
 import com.example.security.service.EmployeeService;
-import com.example.security.service.UserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -50,18 +50,15 @@ public class EmployeeController {
             list2.add(userRoleBean);
             model2.addAttribute("roleList", list2);
         }
-
-//        UserPrincipal userPrincipal = null;
-//        HttpSession httpSession = null;
-//        System.out.println("Added to the session "+userPrincipal.getAuthorities());
-//            httpSession.setAttribute("user",employees.addAll((Collection<? extends Employees>) userPrincipal.getAuthorities()));
-
         return "listEmp";
     }
 
     @PostMapping("/add")
-    public RedirectView addEmp(EmployeeBean empBean) {
-        System.out.println("Add Employee Controller");
+    public RedirectView addEmp(EmployeeBean empBean,@RequestParam("file") MultipartFile file)
+            throws IOException,IllegalStateException {
+        System.out.println("Add Employee Controller "+file.getName());
+        String baseDir = "D:\\eclipse-workspace\\security.zip_expanded\\security\\src\\main\\resources\\templates\\images\\";
+        file.transferTo(new File(baseDir+empBean.getUsername()+".jpg"));
         employeeService.addEmployees(empBean);
         return new RedirectView("/employee/list");
     }
@@ -69,7 +66,10 @@ public class EmployeeController {
     @PostMapping("/update")
     public RedirectView updateEmp(EmployeeBean employeeBean) {
         System.out.println("update Employee Controller");
-        System.out.println(employeeBean.getRole_id());
+        if(employeeBean.getRole_id()==null){
+          Object obj = employeeService.getEmployees(Long.parseLong(employeeBean.getId()));
+            System.out.println(obj);
+        }
         employeeService.updateEmp(employeeBean);
         return new RedirectView("/employee/list");
     }

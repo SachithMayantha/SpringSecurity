@@ -8,8 +8,28 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap.min.css">
 </head>
 <body>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.6/js/responsive.bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var table = $('#table').DataTable({
+            responsive: true
+        });
+
+        new $.fn.dataTable.FixedHeader( table );
+    });
+</script>
 <script language="javascript">
     var session = '<%= Session["user"] %>';
     console.log(session);
@@ -39,7 +59,7 @@
             <div class="modal-header">
                 <h3 class="modal-title">Add Employee</h3>
             </div>
-            <form action="/employee/add" method="post">
+            <form action="/employee/add" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <span style="color: red">*</span><small>Required</small><br>
                     <fieldset class="form-group">
@@ -110,6 +130,10 @@
                             });
                         </script>
                     </fieldset>
+                    <fieldset class="form-group">
+                        <label>Employee Image</label>
+                        <input type="file" id="file" name="file">
+                    </fieldset>
                 </div>
                 <div class="modal-footer">
                     <div class="container text-left">
@@ -122,7 +146,13 @@
     </div>
 </div>
 <!--End - Add Employee Modal-->
-
+<!--<div class="bs-example bs-example-tabs">-->
+<!--    <ul id="myTab" class="nav nav-tabs">-->
+<!--        <li class="active"><a href="#signin" data-toggle="tab">Sign In</a></li>-->
+<!--        <li class=""><a href="#signup" data-toggle="tab">Register</a></li>-->
+<!--        <li class=""><a href="#why" data-toggle="tab">Why?</a></li>-->
+<!--    </ul>-->
+<!--</div>-->
 <!--Start - Edit Employee Modal-->
 <div id="edit" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -134,7 +164,7 @@
                 <div class="modal-body">
                     <span style="color: red">*</span><small>Required</small><br>
 
-                        <input type="hidden" class="form-control" name="id" id="id2">
+                    <input type="hidden" class="form-control" name="id" id="id2">
 
                     <fieldset class="form-group">
                         <label>Employee Username (0-15 Characters)</label><span style="color: red">*</span>
@@ -143,8 +173,8 @@
                                placeholder="Enter the username">
                     </fieldset>
                     <fieldset class="form-group">
-                        <label>Select Department</label> <select class="form-control"
-                         name="department" id="department">
+                        <label>Select Department</label><select class="form-control"
+                                                                name="department" id="department">
                         <option value="department"></option>
                         <option value="Technical">Technical</option>
                         <option value="Finance">Finance</option>
@@ -160,7 +190,7 @@
                     </fieldset>
                     <fieldset class="form-group">
                         <label>Select UserRole</label><br>
-                        <select class="form-control" id="role_id" name="role_id">
+                        <select name="role_id" class="form-control">
                             <option th:each="role : ${roleList}" th:value="${role.role_id}"
                                     th:text="${role.role_name}"/>
                             </option>
@@ -177,7 +207,17 @@
     </div>
 </div>
 <!--End - Edit Employee Modal-->
-
+<!--show images-->
+<!--<div id="image" class="modal fade" role="dialog">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h3 class="modal-title">Edit Employee</h3>-->
+<!--            </div>-->
+<!--            <form action="/employee/update" method="post">-->
+<!--                <div class="modal-body">-->
+<!--                    <img src='images/"+filename+".jsp'/>-->
+<!--                </div>-->
 <div class="container">
     <div class="jumbotron">
         <label>Logged in :</label>
@@ -195,13 +235,16 @@
         <h3>Employee List</h3><br>
         <form action="/employee/list" method="GET">
             <table class="table table-dark" id="table">
+                <thead>
                 <tr>
                     <th>ID</th>
                     <th>Employee Name</th>
                     <th>Department</th>
                     <th>Mobile No</th>
+                    <th>Photo</th>
                     <th>Actions</th>
                 </tr>
+                </thead>
                 <tbody>
                 <tr th:each="emp : ${list}">
                     <input type="hidden" th:value="${emp.id}"/>
@@ -209,6 +252,9 @@
                     <td><span th:text="${emp.username}"/></td>
                     <td><span th:text="${emp.department}"/></td>
                     <td><span th:text="${emp.mobile_no}"/></td>
+
+                    <td><a onclick="show_image([[${emp.username}]])">view</a></td>
+                    <!--                    <td><a th:onclick="show_image([[${emp.username}]])" data-toggle="modal">view</a></td>-->
                     <td>
                         <a type="button" class="btn btn-warning" data-toggle="modal"
                            th:onclick="editEmployee([[${emp.id}]])">Edit</a>
@@ -222,14 +268,14 @@
         </form>
     </div>
 </div>
-<!--<script th:inline="javascript">-->
-<!--    var i = [[${list}]];-->
-<!--    console.log(i);-->
-<!--</script>-->
 <script>
+    function show_image(filename) {
+        console.log(filename);
+        document.write('<a href=\'/images/"+filename+".jsp\'>');
+    }
+
     function editEmployee(id) {
         $('#edit').modal('show');
-        // var id = $(id).parent().prev().prev().prev().prev()[0].outerText;
         $.ajax({
             type: "GET",
             url: "/employee/getEmployee",
@@ -270,6 +316,7 @@
             }
         });
     }
+
     function deleteEmployee(id) {
         $('#delete').modal('show');
         $.ajax({

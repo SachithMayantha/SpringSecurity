@@ -34,7 +34,11 @@ public class EmployeeService {
         employees1.setUsername(employeeBean.getUsername());
         employees1.setMobileNo(employeeBean.getMobile_no());
         employees1.setDepartment(employeeBean.getDepartment());
-        employees1.setRoleId(userRole.get(0));
+        try {
+            employees1.setRoleId(userRole.get(0));
+        }catch (Exception e){
+            employees1.setRoleId(employees1.getRoleId());
+        }
         System.out.println(employeeBean.getRole_id());
         return employeeRepository.save(employees1);
     }
