@@ -234,20 +234,29 @@
         <hr>
         <h3>Employee List</h3><br>
         <form action="/employee/list" method="GET">
-            <table class="table table-dark" id="table">
+            <table class="table table-dark" id="table" style="width: 100%">
                 <thead>
                 <tr>
+                    <th>Edit Action</th>
+                    <th>Delete Action</th>
                     <th>ID</th>
                     <th>Employee Name</th>
                     <th>Department</th>
                     <th>Mobile No</th>
                     <th>Photo</th>
-                    <th>Actions</th>
+
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="emp : ${list}">
                     <input type="hidden" th:value="${emp.id}"/>
+                    <td>
+                        <a type="button" class="btn btn-warning" data-toggle="modal"
+                           th:onclick="editEmployee([[${emp.id}]])">Edit</a></td><td>
+                        <a type="button" class="btn btn-danger" data-toggle="modal"
+                           th:onclick="getEmployee([[${emp.id}]])">Delete
+                        </a>
+                    </td>
                     <td><span th:text="${emp.id}"/></td>
                     <td><span th:text="${emp.username}"/></td>
                     <td><span th:text="${emp.department}"/></td>
@@ -255,13 +264,7 @@
 
                     <td><a onclick="show_image([[${emp.username}]])">view</a></td>
                     <!--                    <td><a th:onclick="show_image([[${emp.username}]])" data-toggle="modal">view</a></td>-->
-                    <td>
-                        <a type="button" class="btn btn-warning" data-toggle="modal"
-                           th:onclick="editEmployee([[${emp.id}]])">Edit</a>
-                        <a type="button" class="btn btn-danger" data-toggle="modal"
-                           th:onclick="getEmployee([[${emp.id}]])">Delete
-                        </a>
-                    </td>
+
                 </tr>
                 </tbody>
             </table>
